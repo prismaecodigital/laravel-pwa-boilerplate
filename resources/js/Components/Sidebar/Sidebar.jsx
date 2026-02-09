@@ -7,7 +7,8 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const trigger = useRef();
   const sidebar = useRef();
 
-  const storedSidebarExpanded = localStorage.getItem('crm-sidebar-expanded');
+  // Dont forget to change the key name when you change the name of the sidebar
+  const storedSidebarExpanded = localStorage.getItem('pwa-sidebar-expanded');
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
   );
@@ -39,7 +40,8 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
   });
 
   useEffect(() => {
-    localStorage.setItem('crm-sidebar-expanded', sidebarExpanded.toString());
+    // Dont forget to change the key name when you change the name of the sidebar
+    localStorage.setItem('pwa-sidebar-expanded', sidebarExpanded.toString());
     if (sidebarExpanded) {
       document.querySelector('body')?.classList.add('sidebar-expanded');
     } else {
