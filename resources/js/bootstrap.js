@@ -3,11 +3,25 @@
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
-
 import axios from 'axios';
 window.axios = axios;
 
+const appOrigin = new URL(import.meta.env.VITE_APP_URL ?? window.location.origin).origin;
+
+window.axios.defaults.baseURL = appOrigin;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+window.axios.interceptors.request.use((config) => {
+    const requestUrl = new URL(config.url ?? '', appOrigin);
+
+    if (requestUrl.origin !== appOrigin) {
+        return Promise.reject(new Error('External Axios requests are blocked for security reasons.'));
+    }
+
+    config.url = requestUrl.href.replace(appOrigin, '');
+
+    return config;
+});
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
