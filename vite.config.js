@@ -13,6 +13,9 @@ export default defineConfig({
         VitePWA({
             registerType: 'autoUpdate',
             includeAssets: ['favicon.ico', 'robots.txt', 'icons/*.png'],
+            additionalManifestEntries: [
+                { url: '/offline', revision: null },
+            ],
             manifest: {
                 name: 'Laravel PWA',
                 short_name: 'PWA App',
@@ -40,25 +43,11 @@ export default defineConfig({
             workbox: {
                 skipWaiting: true,
                 clientsClaim: true,
+                cleanupOutdatedCaches: true,
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,json}'],
                 navigateFallback: '/offline',
                 navigateFallbackDenylist: [/^\/api\//],
                 runtimeCaching: [
-                    {
-                        urlPattern: ({ request }) => request.destination === 'document',
-                        handler: 'NetworkFirst',
-                        options: {
-                            cacheName: 'pages-cache',
-                            expiration: {
-                                maxEntries: 30,
-                                maxAgeSeconds: 24 * 60 * 60, // 1 day
-                            },
-                            networkTimeoutSeconds: 3,
-                            cacheableResponse: {
-                                statuses: [0, 200]
-                            }
-                        }
-                    },
                     {
                         urlPattern: ({ url }) => url.pathname.startsWith('/api'),
                         handler: 'NetworkFirst',
